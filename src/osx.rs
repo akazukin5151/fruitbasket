@@ -558,21 +558,6 @@ impl Trampoline {
 
             write!(&mut f, "}}\n")?;
 
-            // Launch newly created bundle
-            //let cls = Class::get("NSWorkspace").unwrap();
-            //let wspace: *mut Object = msg_send![cls, sharedWorkspace];
-            //let cls = Class::get("NSString").unwrap();
-            //let app = bundle_dir.to_str().unwrap();
-            //info!("Launching: {}", app);
-            //let s: *mut Object = msg_send![cls, alloc];
-            //let s: *mut Object = msg_send![s,
-            //                               initWithBytes:app.as_ptr()
-            //                               length:app.len()
-            //                               encoding: 4]; // UTF8_ENCODING
-            //let _:() = msg_send![wspace, launchApplication: s];
-            //
-            //// Note: launchedApplication doesn't return until the child process
-            //// calls [NSApplication sharedApplication].
             //info!("Parent process exited.");
             std::process::exit(0);
         }
@@ -838,6 +823,25 @@ impl<'a> FruitApp<'a> {
             None
         }
     }
+            /// Launch newly created bundle
+pub fn launch_bundle(bundle_dir: &Path) {
+unsafe {
+            let cls = Class::get("NSWorkspace").unwrap();
+            let wspace: *mut Object = msg_send![cls, sharedWorkspace];
+            let cls = Class::get("NSString").unwrap();
+            let app = bundle_dir.to_str().unwrap();
+            info!("Launching: {}", app);
+            let s: *mut Object = msg_send![cls, alloc];
+            let s: *mut Object = msg_send![s,
+                                           initWithBytes:app.as_ptr()
+                                           length:app.len()
+                                           encoding: 4]; // UTF8_ENCODING
+            let _:() = msg_send![wspace, launchApplication: s];
+            
+            // Note: launchedApplication doesn't return until the child process
+            // calls [NSApplication sharedApplication].
+}
+}
 }
 
 /// Parse an Apple URL event into a URL string
