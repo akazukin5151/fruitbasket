@@ -462,8 +462,8 @@ impl Trampoline {
     /// * Result<FruitApp, _> if running in a Mac bundle (either when launched
     ///   from one initially, or successfully re-launched by `Trampoline`)
     ///   containing the initialized app environment,
-    pub fn build<'a>(&mut self, dir: InstallDir) -> Result<FruitApp<'a>, FruitError> {
-        self.self_bundle(dir)?; // terminates this process if not bundled
+    pub fn build<'a>(&mut self, src_exe: PathBuf, dir: InstallDir) -> Result<FruitApp<'a>, FruitError> {
+        self.self_bundle(src_exe, dir)?; // terminates this process if not bundled
         info!("Process is bundled.  Continuing.");
         Ok(FruitApp::new())
     }
@@ -480,7 +480,7 @@ impl Trampoline {
     ///
     /// Useful if you'd like to use a GUI library, such as libui, and don't
     /// want fruitbasket to try to initialize anything for you. Bundling only.
-    pub fn self_bundle(&self, dir: InstallDir) -> Result<(), FruitError> {
+    pub fn self_bundle(&self, src_exe: PathBuf, dir: InstallDir) -> Result<(), FruitError> {
         unsafe {
             if Self::is_bundled() {
                 return Ok(());
@@ -500,7 +500,6 @@ impl Trampoline {
             let macos_dir = contents_dir.clone().join("MacOS");
             let resources_dir = contents_dir.clone().join("Resources");
             let plist = contents_dir.clone().join("Info.plist");
-            let src_exe = std::env::current_exe()?;
             info!("Current exe: {:?}", src_exe);
             let dst_exe = macos_dir.clone().join(&self.exe);
 
