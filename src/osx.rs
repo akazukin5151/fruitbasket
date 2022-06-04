@@ -823,9 +823,9 @@ impl<'a> FruitApp<'a> {
             None
         }
     }
-            /// Launch newly created bundle
-pub fn launch_bundle(bundle_dir: &Path) {
-unsafe {
+    /// Launch newly created bundle
+    pub fn launch_bundle(bundle_dir: &Path) {
+        unsafe {
             let cls = Class::get("NSWorkspace").unwrap();
             let wspace: *mut Object = msg_send![cls, sharedWorkspace];
             let cls = Class::get("NSString").unwrap();
@@ -837,11 +837,11 @@ unsafe {
                                            length:app.len()
                                            encoding: 4]; // UTF8_ENCODING
             let _:() = msg_send![wspace, launchApplication: s];
-            
+
             // Note: launchedApplication doesn't return until the child process
             // calls [NSApplication sharedApplication].
-}
-}
+        }
+    }
 }
 
 /// Parse an Apple URL event into a URL string
